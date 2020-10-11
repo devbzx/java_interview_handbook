@@ -1,6 +1,6 @@
 # JavaSE基础
 
-## 面向对象
+## 1、面向对象
 
 ### 1、面向对象都有哪些特性
 
@@ -116,7 +116,7 @@ clone是浅拷贝
 2. body.head == body1.head : false 
 ```
 
-## JavaSE语法
+## 2、JavaSE语法
 
 ### 1、goto
 
@@ -278,13 +278,13 @@ break用来结束循环，跳出循环执行循环外的语句
 
 continue执行后跳出此次循环，执行下次循环
 
-## Java中的多态
+## 3、Java中的多态
 
 ### 1、java中实现多态的机制是什么
 
 父类或接口定义的引用变量可以指向子类或具体实现类的实例对象，程序调用的方法在运行期才动态绑定，就是引用变量所指向的具体实例对象的方法，也就是内存里正在运行的那个对象的方法，而不是引用变量类型中定义的方法。
 
-## Java的异常处理
+## 4、Java的异常处理
 
 ### 1、java中异常类分为哪些种类
 
@@ -329,6 +329,165 @@ ArithmaticException,IllegalArgumentException，编译能通过，但是一运行
 ##### 受检查的异常(Checked Exception )
 
 要么用 try。。。catch 捕获，要么用 throws 字句声明抛出，交给它 的父类处理，否则编译不会通过。
+
+### 3、java异常处理机制
+
+java对异常进行了分类，不同异常用不同的java类表示，所有异常的根类为java.lang.Throwable。
+
+#### Java为系统异常和普通异常提供了不同的解决方案
+
+##### 普通异常
+
+编译器强制普通异常必须try ... catch处理或用throws声明继续抛给上层调用方法处理，所以普通异常也称为checked异常
+
+##### 系统异常
+
+可以处理也可以不处理
+
+### 4、常见的RuntimeException
+
+nullpointer、classnotfound、indexoutofbounds、classcast、numberformat、illegalargument、sql、nosuchmethod、noclassdeffound（本人速记）
+
+#### 1）NullPointerException 
+
+​		java.lang.NullPointerException空指针异常：出现原因：调用了未经初始化的对象或者是不存在的对象。
+
+#### 2）ClassNotFoundException 
+
+​		java.lang.ClassNotFoundException指定的类找不到：出现原因：类的名称和路径加载错误；通常都是程序 试图通过字符串	来加载某个类时可能引发异常。
+
+#### 3）NumberFormatException 
+
+​		java.lang.NumberFormatException字符串转换为数字异常：出现原因：字符型数据中包含非数字型字符。
+
+#### 4）IndexOutOfBoundsException 
+
+​		java.lang.IndexOutOfBoundsException数组角标越界异常：常见于操作数组对象时发生。 
+
+#### 5）IllegalArgumentException 
+
+​		java.lang.IllegalArgumentException方法传递参数错误。
+
+#### 6）ClassCastException 
+
+​		java.lang.ClassCastException数据类型转换异常。 
+
+#### 7）NoClassDefFoundException 
+
+​		java.lang.NoClassDefFoundException未找到类定义错误。 
+
+#### 8）SQLException 
+
+​		SQL 异常，常见于操作数据库时的 SQL 语句错误。 
+
+#### 9） InstantiationException 
+
+​		 java.lang.InstantiationException实例化异常。 
+
+#### 10）NoSuchMethodException 
+
+​		java.lang.NoSuchMethodException方法不存在异常。 
+
+### 5、throw和throws的区别
+
+#### throw
+
+1）throw语句用在方法体内，表示抛出异常，由方法体内的语句处理。
+
+2）throw是具体向外抛出异常的动作，所以它抛出的是一个异常实例，执行throw一定是抛出了某种异常。
+
+#### throws
+
+1）throws语句是用在方法声明后面，表示如果抛出异常，由该方法的调用者来进行异常的处理。
+
+2）throws主要声明这个方法会抛出某种类型的异常，让它的使用者知道需要捕获的异常的类型。
+
+3）throws表示出现异常的一种可能性，并不一定会发生这种异常。
+
+### 6、final、finally、finalize的区别
+
+#### 1）final
+
+用于声明属性、方法和类，分别表示属性不可变，方法不可覆盖，被其修饰的类不可继承。
+
+#### 2）finally
+
+异常处理语句结构的一部分，表示总是执行
+
+#### 3）finalize
+
+Object类的一个方法，垃圾回收器执行时会调用被回收对象的此方法，可以覆盖此方法提供垃圾收集时的其他资源回收（关闭文件等）。当该方法被调用则代表该对象即将”死亡“，这是个被动方法，不需要我们调用。
+
+## 5、JavaSE常用的API
+
+### 1、Math.round()
+
+四舍五入取整（负数的.5向绝对值小的地方转，正数的.5向绝对值大的地方转，其余数向接近的地方转）
+
+示例
+
+```java
+System.out.println("Math.round(-22.6):"+Math.round(-22.6));
+System.out.println("Math.round(-22.5):"+Math.round(-22.5));
+System.out.println("Math.round(-22.4):"+Math.round(-22.4));
+System.out.println("Math.round(22.6):"+Math.round(22.6));
+System.out.println("Math.round(22.5):"+Math.round(22.5));
+System.out.println("Math.round(22.4):"+Math.round(22.4));
+```
+
+结果
+
+```java
+Math.round(-22.6):-23
+Math.round(-22.5):-22
+Math.round(-22.4):-22
+Math.round(22.6):23
+Math.round(22.5):23
+Math.round(22.4):22
+```
+
+### 2、switch()
+
+Java 5.0以前只能用byte、short、char、int
+
+Java 5.0开始java引入了枚举类型，所以可以用enum类型
+
+Java 7.0开始可以使用字符串
+
+总结
+
+byte、short、char、int、enum、String
+
+### 3、数组用没有length()方法？String有没有length()方法？
+
+数组没有length()方法，有length属性。
+
+```java
+int[] ints = new int[10];
+int length = ints.length;
+```
+
+String有length()方法。
+
+```java
+String s = "";
+int length = s.length();
+System.out.println(length);
+```
+
+### 4、String、StringBuffer、StringBuilder区别
+
+都可以储存和操作字符串
+
+1）String 是只读字符串，其引用的字符串的内容不能被改变。
+
+2）StringBuilder、StringBuffer表示的字符串对象可以直接进行修改。
+
+3）StringBuilder 是Java 5中引入的，它和StringBuffer 的方法完全相同，它是单线程下使用的，它的所有方法没被synchronized修饰，因此它的效率比StringBuffer高。
+
+### 
+
+
 
 
 
