@@ -1,8 +1,10 @@
 # JavaSE基础
 
+[TOC]
+
 ## 1、面向对象
 
-### 1、面向对象都有哪些特性
+### 一、面向对象都有哪些特性
 
 #### 1）继承
 
@@ -116,7 +118,7 @@ clone是浅拷贝
 2. body.head == body1.head : false 
 ```
 
-## 2、JavaSE语法
+## 二、JavaSE语法
 
 ### 1、goto
 
@@ -278,13 +280,13 @@ break用来结束循环，跳出循环执行循环外的语句
 
 continue执行后跳出此次循环，执行下次循环
 
-## 3、Java中的多态
+## 三、Java中的多态
 
 ### 1、java中实现多态的机制是什么
 
 父类或接口定义的引用变量可以指向子类或具体实现类的实例对象，程序调用的方法在运行期才动态绑定，就是引用变量所指向的具体实例对象的方法，也就是内存里正在运行的那个对象的方法，而不是引用变量类型中定义的方法。
 
-## 4、Java的异常处理
+## 四、Java的异常处理
 
 ### 1、java中异常类分为哪些种类
 
@@ -418,7 +420,7 @@ nullpointer、classnotfound、indexoutofbounds、classcast、numberformat、ille
 
 Object类的一个方法，垃圾回收器执行时会调用被回收对象的此方法，可以覆盖此方法提供垃圾收集时的其他资源回收（关闭文件等）。当该方法被调用则代表该对象即将”死亡“，这是个被动方法，不需要我们调用。
 
-## 5、JavaSE常用的API
+## 五、JavaSE常用的API
 
 ### 1、Math.round()
 
@@ -479,13 +481,154 @@ System.out.println(length);
 
 都可以储存和操作字符串
 
-1）String 是只读字符串，其引用的字符串的内容不能被改变。
+1）String 是只读字符串、字符串常量，其引用的字符串的内容不能被改变。若修改，等于重新生成新的字符串对象。
 
-2）StringBuilder、StringBuffer表示的字符串对象可以直接进行修改。
+StringBuilder、StringBuffer表示的字符串对象可以直接进行修改。每次操作都是对 StringBuilder、StringBuffer 对象本身进行修改，不是生成新的对 象；
 
-3）StringBuilder 是Java 5中引入的，它和StringBuffer 的方法完全相同，它是单线程下使用的，它的所有方法没被synchronized修饰，因此它的效率比StringBuffer高。
+2）String：对象定义后不可变，线程安全。
 
-### 
+ StringBuffer：是线程安全的（对调用方法加入同步锁），执行效率 较慢，适用于多线程下操作字符串缓冲区。
+
+StringBuilder：是线程不安全的，适用于单线程下操作字符串缓冲区大量数据。 
+
+StringBuilder 是Java 5中引入的，它和StringBuffer 的方法完全相同，它是单线程下使用的，它的所有方法没被synchronized修饰，因此它的效率比StringBuffer高。
+
+3）共同点
+
+StringBuilder 与 StringBuffer 有公共父类 AbstractStringBuilder(抽象类)。 StringBuilder、StringBuffer 的方法都会调用 AbstractStringBuilder 中的公共方法，如 super.append(...)。 只是 StringBuffer 会在方法上加 synchronized 关键字，进行同步。最后，如果程序不是多线程的，那么使用 StringBuilder 效率高于 StringBuffer。 
+
+### 5、String中的 ==
+
+```java
+String s1 = "helloworld";
+String s2 = new String("helloworld");
+String s3 = "hello";
+String s4 = "world";
+String s5 = "hello" + "world";
+String s6 = s3 + s4;
+System.out.println("s1==s2:" + (s1 == s2));
+System.out.println("s1==s5:" + (s1 == s5));
+System.out.println("s1==s6:" + (s1 == s6));
+System.out.println("s1==s6.intern():" + (s1 == s6.intern()));
+System.out.println("s2==s2.intern():" + (s2 == s2.intern()));
+```
+
+```java
+s1==s2:false
+s1==s5:true
+s1==s6:false
+s1==s6.intern():true
+s2==s2.intern():false
+```
+
+### 6、Java 中的日期和时间
+
+## 六、Java 的数据类型
+
+### 1、基本数据类型及其占的字节数
+
+| 四类   | 八种    | 字节数 | 描述                   |
+| ------ | ------- | ------ | ---------------------- |
+| 整型   | byte    | 1      | 8位（带符号位）        |
+|        | short   | 2      | 16位（带符号位）       |
+|        | int     | 4      | 32位（带符号位）       |
+|        | long    | 8      | 64位（带符号位）       |
+| 浮点型 | float   | 4      |                        |
+|        | double  | 8      |                        |
+| 字符型 | char    | 2      | 表示一个字符可以是中文 |
+| 布尔型 | boolean | 1      | true,false             |
+
+### 2、String是基本数据类型吗
+
+String是引用数据类型，底层是char数组。
+
+### 3、关于short 
+
+```java
+short s1 = 1;
+s1 = s1 + 1;
+```
+
+1是int类型，s1 + 1结果也应该为int，需要强制类型转换才能赋给short。
+
+```java
+short s1 = 1;
+s1 += 1;
+```
+
++=隐含强制类型转换。
+
+### 4、基本类型对应的包装类
+
+| byte | short | int     | long | float | double | char      | boolean |
+| ---- | ----- | ------- | ---- | ----- | ------ | --------- | ------- |
+| Byte | Short | Integer | Long | Float | Double | Character | Boolean |
+
+### 5、Integer 的比较
+
+当数值范围在-128~127之间时直接引用常量池中的Integer对象。
+
+### 6、String的常用方法
+
+#### 1）length()
+
+返回字符串长度
+
+#### 2）indexOf(int ch)
+
+查找ch字符在该字符串中第一次出现的位置
+
+#### 3）indexOf(String str)
+
+查找str子字符串在该字符串中第一次出现的位置
+
+#### 4）lastIndexOf(int ch)
+
+查找ch字符在该字符串中最后一次出现的位置
+
+#### 5）indexOf(String str)
+
+查找str子字符串在该字符串中最后一次出现的位置
+
+#### 6）subString(int beginIndex)
+
+获取从beginIndex位置开始到结束的子字符串
+
+#### 7）subString(int beginIndex, int endIndex)
+
+获取从beginIndex位置开始到endIndex位置的子字符串
+
+#### 8）trim()
+
+返回去除了前后空格的字符串
+
+#### 9）equals(Object obj)
+
+将该字符串与指定对象比较，返回true或false
+
+#### 10）toLowerCase()
+
+将字符串转换为小写
+
+#### 11）toUpperCase()
+
+将字符串转换为大写
+
+#### 12）charAt(int index)
+
+获取字符串中指定位置的字符
+
+#### 13）split(String regex , int limit)
+
+将字符串分割为子字符串，返回字符串数组
+
+#### 14）getBytes()
+
+将该字符串转换为byte数组
+
+### 七、Java 的IO
+
+
 
 
 
