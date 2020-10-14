@@ -1,6 +1,6 @@
 # JavaSE基础
 
-[TOC]
+
 
 ## 1、面向对象
 
@@ -626,11 +626,114 @@ s1 += 1;
 
 将该字符串转换为byte数组
 
-### 七、Java 的IO
+## 七、Java 的IO
 
+### 1、java 中的流
 
+#### 按流的方向
 
+输入流(inputStream)和输出流(outputStream)。
 
+#### 按处理数据的单位
 
+字节流继承于InputStream和OutputStream。
 
+字符流继承于InputStreamReader和OutputStreamWriter
 
+### 2、字节流如何转为字符流
+
+#### 输入流
+
+InputStreamReader拥有构造函数可以传入InputStream对象。
+
+#### 输出流
+
+OutputStreamWriter拥有构造函数可以传入OutputStream对象。
+
+### 3、将对象序列化到文件
+
+创建对象
+
+```java
+public class Person implements Serializable {
+    private Integer id;
+    private String name;
+    public Person(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+开始操作
+
+```java
+public class PersonTest {
+    public static void main(String[] args) throws Exception {
+        //写
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("1.txt")));
+        oos.writeObject(new Person(1,"张三"));
+        oos.close();
+        //读
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("1.txt")));
+        Person person = (Person) ois.readObject();
+        System.out.println(person);
+        ois.close();
+    }
+}
+```
+
+### 4、字节流和字符流的区别
+
+#### 字节流
+
+处理单元为一个字节，操作字节和字节数组；
+
+以字节为单位，读到一个返回一个；
+
+可以处理所有类型的数据：图片、MP3、AVI视频文件。
+
+#### 字符流
+
+处理的单元为2个字节的Unicode字符，分别为操作字符、字符数组或字符串；
+
+使用字节流读到一个或多个字节(中文对应的字节数是两个，在UTF-8码表中是三个字节)时，先去查指定编码表，将查到的字符返回；
+
+只能处理字符数据。
+
+**处理纯文本优先使用字符流，除此之外都用字节流**
+
+**在程序中一个字符等于两个字节**
+
+### 5、通过序列化克隆对象
+
+可以实现真正的深拷贝
+
+### 6、什么是java序列化，如何实现java序列化
+
+序列化是一种用来处理对象流的机制，对象流就是将对象的内容进行流化。可以对流化的对象进行读写操作，也可以将流化后的对象传输于网络之间。序列化是为了解决在对对象流进行读写操作时所引发的问题。
+
+序列化的实现：将需要被序列化的类实现Serializable接口，该接口没有需要实现的方法，只是为了标注该对象是可被序列化的，然后使用一个输出流(如：FileOutputStream)来构造一个ObjectOutputStream(对象流)对象，接着使用ObjectOutputStream对象的writeObject(Object obj)方法就可以将参数为obj的对象写出(即保存其状态)，要恢复的话则用输入流。
+
+原文链接：https://www.cnblogs.com/yangchunze/p/6728086.html
+
+## 八、Java 的集合
