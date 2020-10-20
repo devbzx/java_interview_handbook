@@ -737,3 +737,408 @@ public class PersonTest {
 原文链接：https://www.cnblogs.com/yangchunze/p/6728086.html
 
 ## 八、Java 的集合
+
+# 框架
+
+依赖豪华版（spring）
+
+```xml
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <spring.version>5.0.0.RELEASE</spring.version>
+    <commons-logging.version>1.2</commons-logging.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.21</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/aopalliance/aopalliance -->
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.8.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!--springmvc  -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.18</version>
+    </dependency>
+    <!-- MyBatis -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>3.4.6</version>
+    </dependency>
+    <!-- mybatis-spring -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>1.3.0</version>
+    </dependency>
+    <!-- spring-jdbc -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!-- dbcp -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>2.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+      <version>2.4.2</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+```
+
+
+
+## 一、SpringMVC
+
+### 搭建springmvc
+
+#### 1）引入依赖
+
+```java
+<properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <spring.version>5.0.0.RELEASE</spring.version>
+    <commons-logging.version>1.2</commons-logging.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <!--springmvc  -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+  </dependencies>
+```
+
+#### 2）编写application.xml
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+    <context:annotation-config></context:annotation-config>
+</beans>
+```
+
+#### 3）编写springmvc.xml
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+    <context:component-scan base-package="com.lhq.controller"></context:component-scan>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
+</beans>
+```
+
+配置web.xml
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>Archetype Created Web Application</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:application.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>encoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encoding</filter-name>
+    <!--    此处应为"/*"-->
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:springmvc.xml</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>
+```
+
+### 1、SpringMVC的工作原理
+
+用户向服务器发送请求，请求被前端控制器DispatcherServlet捕获
+
+DispatcherServlet对URL进行解析，根据URL调用HandlerMapping将请求映射到处理器HandlerExcutionChain
+
+DispatcherServlet根据获得的Handler选择一个合适的HandlerAdapter适配器处理
+
+HandlerAdapter返回一个ModelAndView逻辑视图给DisptcherServlet
+
+DisptcherServlet将ModelAndView交给ViewResolver进行解析处理返回一个真正的视图
+
+### 2、SpringMVC常用注解都有哪些
+
+@RequestMapping 用于请求 url 映射
+
+@RequestBody 注解实现接收 http 请求的 json 数据，将 json 数据转换为 java 对象
+
+@ResponseBody 将Controller 方法返回对象转化为 json 响应给用户
+
+### 3、如何开启注解处理器和适配器
+
+在 springmvc.xml 中通过开启
+
+```xml
+<mvc:annotation-driven/>
+```
+
+来实现注解处理器和适配器的开启
+
+### 4、如何解决 get 和 post 乱码问题
+
+post：
+
+在 web.xml 里面配置一个CharacterEncodingFilter 过滤器。设置编码格式为 utf-8
+
+get：
+
+修改 tomcat 配置文件添加编码和工程编码一致。
+
+对参数重新编码
+
+```java
+String parm = new String(req.getParameter("parm").getBytes("前端编码格式"),"utf-8");
+```
+
+## 二、Spring
+
+### 1、对Spring的理解
+
+Spring是一个IOC和AOP框架。
+
+核心是：
+
+控制反转（IOC）：在spring开发中，spring容器使用工厂模式为我们创建了所需要的对象，不需要我们自己创建，直接调用spring提供的对象就行。
+
+依赖注入（DI）：spring 通过 set 方法或者带参数的构造方法为我们创建所需对象时将其属性自动设置所需要的值。
+
+面向切面编程（AOP）：面向对象将事务纵向成一个个的对象。在面向切面编程中，将一个个对象某些类似方面横向抽成一个切面，对这个切面进行一些权限控制、事务管理，记录日志等公用操作处理的过程就是面向切面编程。AOP底层是动态代理，如果是接口采用 JDK 动态代理，如果是类采用 CGLIB 方式实现动态代理。
+
+### 2、Spring 中的设计模式
+
+#### 1）单例模式
+
+在 spring 的配置文件中的 bean 默认为单例模式。
+
+#### 2）模板方式模式
+
+用来解决代码重复的问题
+
+如：RestTemplate、JmsTemplate、JpaTemplate。
+
+#### 3）前端控制器模式
+
+使用 DispatcherServlet 来对请求进行分发。
+
+#### 4）视图模式
+
+spring 提供了一系列 JSP 标签，将分散的代码整合在视图中。
+
+#### 5）包装器模式
+
+spring中用到的包装器模式在类名上有两种表现：一种是类名中含有Wrapper，另一种是类名中含有Decorator。基本上都是动态地给一个对象添加一些额外的职责。
+
+#### 6）工厂模式
+
+##### 简单工厂模式
+
+又叫做静态工厂方法(StaticFactory Method)模式　
+
+简单工厂模式的实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类。spring中的BeanFactory就是简单工厂模式的体现，根据传入一个唯一的标识来获得bean对象，但是否是在传入参数后创建还是传入参数前创建这个要根据具体情况来定。
+
+##### 工厂方法模式
+
+通常由应用程序直接使用new创建新的对象，为了将对象的创建和使用相分离，采用工厂模式,即应用程序将对象的创建及初始化职责交给工厂对象。
+
+一般情况下,应用程序有自己的工厂对象来创建bean.如果将应用程序自己的工厂对象交给Spring管理,那么Spring管理的就不是普通的bean,而是工厂Bean。
+
+#### 7）代理模式
+
+spring 中两种代理方式，若目标对象实现了若干接口，spring 使用 jdk 的java.lang.reflect.Proxy 类代理。若目标兑现没有实现任何接口，spring 使用 CGLIB 库生成目标类的子类。
+
+#### 8）适配器模式
+
+在Spring的Aop中，使用的Advice(通知)来增强被代理类的功能。Spring实现这一AOP功能的原理就使用代理模式对类进行方法级别的切面增强，即，生成被代理类的代理类， 并在代理类的方法前，设置拦截器，通过执行拦截器重的内容增强了代理方法的功能，实现的面向切面编程。
+
+### 3、Spring 的常用注解
+
+开启注解
+
+```xml
+<context:annotation-config/>
+```
+
+常用注解
+
+#### 使用bean
+
+##### @Autowired
+
+
+
+@Autowired(required=false) 
+
+它可以对类成员变量、方法及构造函数进行标注，完成自动装配的工作。 通过 @Autowired的使用来消除 set ，get方法。
+
+如果我们想使用名称装配可以结合@Qualifier注解进行使用
+
+required属性
+
+required属性值可以为true（ 默认值）和false。如果为true的话，没有匹配的类则抛出异常；如果为false，则表示不是强制必须能够找到相应的类，无论是否注入成功，都不会抛错。
+
+##### @Resource
+
+
+
