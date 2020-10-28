@@ -738,3 +738,194 @@ public class PersonTest {
 
 ## 八、Java 的集合
 
+### 1、HashMap 排序
+
+```java
+package com.lhq.hashmap;
+import java.util.*;
+public class SortHashMap {
+    public static void main(String[] args) {
+        HashMap<Integer, User> users = new HashMap<>();
+        users.put(1,new User("张三",10));
+        users.put(2,new User("李四",30));
+        users.put(3,new User("王五",15));
+        HashMap<Integer, User> sortHashMap = sortHashMap(users);
+        System.out.println(sortHashMap);
+    }
+    public static HashMap<Integer,User> sortHashMap(HashMap<Integer,User> map){
+        Set<Map.Entry<Integer, User>> entrySet = map.entrySet();
+        List<Map.Entry<Integer, User>> list = new ArrayList<>(entrySet);
+        Collections.sort(list, new Comparator<Map.Entry<Integer, User>>() {
+            @Override
+            public int compare(Map.Entry<Integer, User> o1, Map.Entry<Integer, User> o2) {
+                return o2.getValue().getAge() - o1.getValue().getAge();
+            }
+        });
+        LinkedHashMap<Integer, User> linkedHashMap = new LinkedHashMap<>();
+        for (Map.Entry<Integer,User> entry:
+             list) {
+            linkedHashMap.put(entry.getKey(),entry.getValue());
+        }
+        return linkedHashMap;
+    }
+}
+class User{
+    private String name;
+    private Integer age;
+
+    public User(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Integer getAge() {
+        return age;
+    }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+### 2、集合安全性问题
+
+在集合中 Vector 和 HashTable 把各自核心方法添加上了 synchronized 关键字，是线程安全的。
+
+ ArrayList、HashSet、HashMap 每个方法都没有加锁，显然都是线程不安全的。
+
+Collections 工具类提供了相关的 API，可以让上面那 3 个不安全的集合变为安全的。 
+
+```java
+Collections.synchronizedCollection(c);
+Collections.synchronizedList(list);
+Collections.synchronizedMap(m); 
+```
+
+上面几个函数都有对应的返回值类型，传入什么类型返回什么类型。
+
+原理，就是将集合的核心方法添加上了 synchronized 关键字。 
+
+### 3、ArrayList 内部用什么实现的？
+
+内部是 Object[] 实现的。
+
+### 4、并发集合和普通集合如何区别？
+
+并发集合常见的有 ConcurrentHashMap、ConcurrentLinkedQueue、ConcurrentLinkedDeque 等。
+
+并发集合位于 java.util.concurrent 包下，是 jdk1.5 之后才有的。
+
+在 java 中有普通集合、同步（线程安全）的集合、并发集合。
+
+普通集合通常性能最高，但是不保证多线程的安全性和并发的可靠性。
+
+线程安全集合仅仅是给集合添加了 synchronized 同步锁，严重牺牲了性能，并且对并发的效率就更低了。
+
+并发集合则通过复杂的策略不仅保证了多线程的安全又提高了并发时的效率。
+
+### 5、List 的三个子类的特点
+
+ArrayList 底层结构是数组，底层查询快，增删慢。
+
+LinkedList 底层结构是链表型的，增删快，查询慢。
+
+Vector 底层结构是数组线程安全的，增删慢，查询慢。
+
+### 6、List 和 Map、Set 的区别
+
+#### 6.1 结构特点
+
+List 和 Set 是存储单列数据的集合，Map 是存储键和值这样的双列数据的集合；
+
+List 中存储的数据是有顺序，并且允许重复；
+
+Map 中存储的数据是没有顺序的，其键是不能重复的，它的值是可以重复的；
+
+Set 中存储的数据是无序的，且不允许有重复，但元素在集合中的位置由元素的 hashcode 决定，位置是固定的（Set 集合根据 hashcode 来   82 进行数据的存储，所以位置是固定的，但是位置不是用户可以控制的，所以对于用户来说 set 中的元素还是无序的）。
+
+#### 6.2 实现类
+
+##### List 接口有三个实现类
+
+LinkedList：基于链表实现，链表内存是散乱的，每一个元素存储本身内存地址的同时还存储下一个元素的地址。链表增删快，查找慢；
+
+ArrayList：基于数组实现，非线程安全的，效率高，便于索引，但不 便于插入删除；
+
+Vector：基于数组实现，线程安全的，效率低。
+
+##### Map 接口有三个实现类
+
+HashMap：基于 hash 表的 Map 接口实现，非线程安全，高效，支持 null 值和 null 键；
+
+HashTable：线程安全，低效，不支持 null 值和 null 键；
+
+LinkedHashMap：是 HashMap 的一个子类，保存了 记录的插入顺序；SortMap 接口：TreeMap，能够把它保存的记录根据键排序，默认是键值的升序排序。
+
+#####  Set 接口有两个实现类
+
+HashSet：底层是由 HashMap 实现，不允许集合中有重复的值，使用该方式时需要重 写 equals()和 hashCode()方法；
+
+LinkedHashSet：继承与 HashSet，同时又基于 LinkedHashMap 来进行实现，底 层使用的是 LinkedHashMap。
+
+#### 6.3 区别
+
+List 集合中对象按照索引位置排序，可以有重复对象，允许按照对象在集合中的索引位置检索对象。
+
+Map 中的每一个元素包含一个键和一个值，成对出现，键对象不可以重复，值对象可以重复。
+
+Set 集合中的对象不按照特定的方式排序，并且没有重复对象，但它的实现类能对集合中的对象按照特定 的方式排序。
+
+### 7、HashMap 和 HashTable 有什么区别？
+
+HashMap 是线程不安全的，HashMap 是一个接口，是 Map 的一个子接口，是将键映射到值的对象，不允许键值重复，允许空键和空值；由于非线程安全，HashMap 的效率要较 HashTable 的效率高一些。
+
+HashTable 是线程安全的一个集合，不允许 null 值作为一个 key 值或者 value 值。
+
+HashTable 是 synchronized 多个线程访问时不需要自己为它的方法实现同步，而 HashMap 在被多个线程访问的时候需要为它的方法实现同步。
+
+### 8、数组和链表分别比较适合用于什么场景，为什么？
+
+#### 区别
+
+##### 数组是将元素在内存中连续存储的；
+
+###### 它的优点
+
+因为数据是连续存储的，内存地址连续，所以在查找数据的时候效 率比较高
+
+###### 它的缺点
+
+在存储之前，我们需要申请一块连续的内存空间，并且在编译的时候就必须确定好它的空间的大 小。在运行的时候空间的大小是无法随着你的需要进行增加和减少而改变的，当数据两比较大的时候，有可能会出现 越界的情况，数据比较小的时候，又有可能会浪费掉内存空间。在改变数据个数时，增加、插入、删除数据效率比较低 
+
+##### 链表是动态申请内存空间
+
+不需要像数组需要提前申请好内存的大小，链表只需在用的时候申请就可以，根据需 要 来动态申请或者删除内存空间，对于数据增加和删除以及插入比数组灵活。
+
+链表中数据在内存中可以在任意的位置，通过应用来关联数据（就是通过存在元素的指针来联系） 
+
+#### 应用场景
+
+##### 数组应用场景
+
+数据比较少；经常做的运算是按序号访问数据元素；数组更容易实现，任何高级语言都支持；构建 的线性表较稳定。
+
+##### 链表应用场景
+
+对线性表的长度或者规模难以估计；频繁做插入删除操作；构建动态性比较强的线性表。
+
+
+
+
+
