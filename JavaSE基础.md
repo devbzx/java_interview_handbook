@@ -925,7 +925,362 @@ HashTable 是 synchronized 多个线程访问时不需要自己为它的方法�
 
 对线性表的长度或者规模难以估计；频繁做插入删除操作；构建动态性比较强的线性表。
 
+#### 面试题
 
+用面向对象的方法求出数组中重复 value 的个数
+
+```java
+int[] arr = {1,4,1,4,2,5,4,5,8,7,8,77,88,5,4,9,6,2,4,1,5};
+```
+
+```java
+int[] arr = {1,4,1,4,2,5,4,5,8,7,8,77,88,5,4,9,6,2,4,1,5};
+HashMap<Integer, Integer> map = new HashMap<>();
+for (int i:arr) {
+    if (!map.containsKey(i)){
+        map.put(i,1);
+    } else {
+        map.replace(i,map.get(i)+1);
+    }
+}
+```
+
+
+
+### 9、Java 中 ArrayList 和 LinkedList 区别？
+
+ArrayList 和 Vector 使用了数组的实现，可以认为 ArrayList 或者 Vector 封装了对内部数组的操作，比如向数组中添加，删除，插入新的元素或者数据的扩展和重定向。
+
+LinkedList 使用了循环双向链表。
+
+**LinkedList 在添加和删除元素时具有比ArrayList更好的性能.但在get与set方面弱于ArrayList**
+
+### 10、List a = new ArrayList() 和 ArrayList a =new ArrayList()的区别？
+
+前者只能使用 List 的属性和方法，不能使用 ArrayList 特有的属性和方法，本质是一个 List 对象。
+
+后者能使用 ArrayList 的方法和属性是一个 ArrayList 对象。
+
+### 11、要对集合操作时，比较ArrayList 和 LinkedList 
+
+当操作是在一列数据的后面添加数据而不是在前面或中间，并且需要随机地访问其中的元素时，使用 ArrayList 会提供比较好的性能；
+
+当你的操作是在一列数据的前面或中间添加或删除数据，并且按照顺序访问其中的元素时，就应该使用 LinkedList 了。 
+
+### 12、请用两个队列模拟堆栈结构。
+
+```java
+Queue<String> queue = new LinkedList<String>();
+List<String> list = new LinkedList<String>();
+queue.offer("a");
+queue.offer("b");
+queue.offer("c");
+queue.offer("d");
+queue.offer("e");
+System.out.println("进栈");
+for (String s : queue){
+    System.out.println(s);
+    list.add(s);
+}
+Queue<String> queue1 = new LinkedList<String>();
+for (int i = list.size()-1;i>=0;i--){
+    queue1.offer(list.get(i));
+}
+System.out.println("出栈");
+for (String s : queue1){
+    System.out.println(s);
+}
+```
+
+```java
+进栈:abcde
+出栈:edcba
+```
+
+### 13、Collection 和 Map 的集成体系
+
+![image-20201029165535050](C:\Users\13014\AppData\Roaming\Typora\typora-user-images\image-20201029165535050.png)
+
+![image-20201029165557072](C:\Users\13014\AppData\Roaming\Typora\typora-user-images\image-20201029165557072.png)
+
+### 14、Map 中的 key 和 value 可以为 null 么？
+
+HashMap 允许 null 值 null 键。
+
+HashTable 不允许 null 值 null 键。
+
+key 均不能重复，若添加 key 相同的键值对，后面的 value 会自动覆盖前面的 value。
+
+## 九、java 的多线程
+
+### 1、程序、进程、线程基本概念
+
+- 程序（program）：是为完成特定任务、用某种语言编写的一组指令的集合。即一段静态的代码，静态对象。
+
+- 进程（progress）：程序的一次执行过程，或是正在运行的一个程序。是一个动态的过程：有它自身的产生、存在和消亡的过程。--生命周期
+
+- - 程序是静态的，进程是动态的
+
+  - 进程作为资源分配的单位，系统在运行时会为每个进程分配不同的内存区域。
+
+  - 进程可以细化为多个线程
+
+  - - 每个线程拥有自己独立的：栈、程序计数器。
+    - 多个线程，共享同一个进程中的结构：方法区、堆。
+
+- 线程（thread）：进程可进一步细化为线程，是一个程序内部的一条执行路径。
+
+- - 若一个进程同一时间并行执行多个线程，就是支持多线程的。
+  - 线程作为调度和执行的单位，每个线程拥有独立的运行栈和程序计数器（pc），线程切换的开销小。
+  - 一个进程中多个线程共享相同的内存单元/内存地址空间->它们从同一堆中分配对象，可以访问相同的变量和对象。这就使得线程间通信更简便、高效。但多个线程操作共享的系统资源可能就会带来安全的隐患。
+
+### 2、并行和并发
+
+- 并行：多个CPU同时执行多个任务。比如：多个人同时做不同的事。
+- 并发：一个CPU（采用时间片）"同时"执行多个任务。比如秒杀、多个人做同一件事。
+
+### 3、多线程的优点
+
+- 提高应用程序的响应。对图形界面更有意义，增强用户体验
+
+- 提高CPU利用率
+
+- 改善程序结构，将既长又复杂的进程分为多个线程，独立运行，利于理解和修改
+
+- 何时需要多线程
+
+- - 需要同时执行两个或多个任务
+  - 需要实现等待的任务，如用户输入、文件读写、网络、搜索
+  - 需要一些后台运行的程序时
+
+### 4、线程的创建和使用
+
+#### 1）传统使用类 Thread 和接口 Runnable 实现
+
+##### 继承 Thread 类
+
+```java
+//方法一
+class MyThread extends Thread{
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            if (i%2==0){
+                System.out.println(Thread.currentThread().getName()+":"+i);
+            }
+        }
+    }
+}
+public class ThreadTest{
+    public static void main(String[] args) {
+        MyThread t1 = new MyThread();
+        t1.start();
+    }
+}
+//方法二
+public class ThreadDemo {
+    public static void main(String[] args) {
+        //创建Thread类的匿名子类的方式
+        new Thread(){
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    if (i%2==0){
+                        System.out.println(Thread.currentThread().getName()+":"+i);
+                    }
+                }
+            }
+        }.start();
+        new Thread(){
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    if (i%2!=0){
+                        System.out.println(Thread.currentThread().getName()+":"+i);
+                    }
+                }
+            }
+        }.start();
+    }
+}
+```
+
+##### 实现 Runnable 接口
+
+```java
+//1.创建一个实现了Runnable接口的类
+class MThread implements Runnable{
+    //2.实现类去实现Runnable中的抽象方法
+    @Override
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            if (i%2==0){
+                System.out.println(Thread.currentThread().getName()+":"+i);
+            }
+        }
+    }
+}
+public class ThreadTest2 {
+    public static void main(String[] args) {
+        //3.创建实现类的对象
+        MThread mThread = new MThread();
+        //4.将此对象作为参数传递到Thread类的构造器中，创建Thread类的对象
+        Thread t1 = new Thread(mThread);
+        t1.setName("线程1");
+        //5.通过Thread类的对象调用start（）:①启动线程；②调用当前线程的run（）-->调用Runnable类型的target
+        t1.start();
+        //再启动一个线程，遍历100以内的偶数
+        Thread t2 = new Thread(mThread);
+        t2.setName("线程2");
+        t2.start();
+    }
+}
+```
+
+#### 2）JDK5.0新增线程创建方式
+
+##### 实现 Callable 接口
+
+```java
+//1.创建一个实现Callable接口的实现类
+class NumThread implements Callable{
+    //2.实现call方法，将此线程需要执行的声明放到此线程中
+    @Override
+    public Object call() throws Exception {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            if (i%2==0){
+                sum+=i;
+            }
+        }
+        return sum;
+    }
+}
+public class ThreadNew {
+    public static void main(String[] args) {
+        //3.创建Callable接口实现类的对象
+        NumThread numThread = new NumThread();
+        //4.将此Callable接口实现类的对象，作为参数传递到FutureTask构造器中，创建FutureTask对象
+        FutureTask futureTask = new FutureTask(numThread);
+        //5.将FutureTask对象作为参数传递到Thread类的构造器中，创建Thread对象，并调用start（）
+        new Thread(futureTask).start();
+        try {
+            //6.获取Callable中call方法的返回值
+            //get方法的返回值即为FutureTask构造器参数Callable实现重写的call()的返回值
+            Object o = futureTask.get();
+            System.out.println(o);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+###### 特点
+
+- 与使用Runnable相比，Callable的功能更强大些
+
+- - 相比run（）方法，可以有返回值
+  - 方法可以抛出异常
+  - 支持泛型返回值
+  - 需要借助FutureTask类，比如获取返回结果
+
+- Future接口
+
+- - 可以对具体的Runnable、Callable任务的执行结果进行取消、查询是否完成、获取结果等。
+  - FutureTask是Future接口的唯一实现类
+  - FutureTask同时实现了Runnable，Future接口。既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值。
+
+##### 使用线程池
+
+```java
+class NumberThread implements Runnable{
+    @Override
+    public void run() {
+
+        for (int i = 1; i <=100 ; i++) {
+            if (i%2==0){
+                System.out.println(Thread.currentThread().getName()+i);
+            }
+        }
+    }
+}
+class Number1Thread implements Runnable{
+    @Override
+    public void run() {
+
+        for (int i = 1; i <=100 ; i++) {
+            if (i%2!=0){
+                System.out.println(Thread.currentThread().getName()+":"+i);
+            }
+        }
+    }
+}
+public class ThreadPool {
+    public static void main(String[] args) {
+        //1.提供指定线程数量的线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        //设置线程池的属性
+        ThreadPoolExecutor service = (ThreadPoolExecutor) executorService;
+        service.setCorePoolSize(15);
+        //        service.setKeepAliveTime();
+        //2.执行指定的线程操作。需要提供实现Runnable接口或Callable接口实现类的对象
+        executorService.execute(new NumberThread());//适合Runnable
+        //        executorService.submit();//适合Callable
+        executorService.execute(new Number1Thread());
+        //        3.关闭连接池
+        executorService.shutdown();
+    }
+}
+```
+
+###### 特点
+
+- 提高了响应速度（减少创建新线程的时间）
+
+- 降低资源消耗（重复利用线程池中的线程，不需要每次都创建）
+
+- 便于线程管理
+
+- - corePoolSize：核心池大小
+  - maximumPoolSize：最大线程数
+  - keepAliveTime：线程没有任务时最多保持多长时间后会终止。
+
+## 十、Java 内部类
+
+### 1、静态嵌套类（static nested class）和内部类（inner class）的不同
+
+#### 静态嵌套类
+
+Static Nested Class 是被声明为静态（static）的内部类，可以不依赖于外部类实例被实例化。
+
+#### 内部类
+
+需要在外部类实例化后才能实例化。
+
+### 2、下面代码哪些地方会产生编译错误
+
+```java
+public class Outer {
+    class Inner{}
+    //错误
+    /*public static void foo(){
+        new Inner();
+    }*/
+    //无错误
+    public void bar(){
+        new Inner();
+    }
+    public static void main(String[] args) {
+        //错误
+        /*new Inner();*/
+        //正确
+        new Outer().new Inner();
+    }
+}
+```
 
 
 
